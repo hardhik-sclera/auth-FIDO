@@ -1,0 +1,28 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "base64url": "^3.0.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "cose-to-jwk": "^1.1.0",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "fido2-lib": "^3.5.3",
+    "jsonwebtoken": "^9.0.2",
+    "nedb-promises": "^6.2.3",
+    "node-jose": "^2.2.0",
+    "nodemon": "^3.1.9",
+    "passport": "^0.7.0",
+    "passport-fido2-webauthn": "^0.1.0"
+  }
+}

@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+ .main-container{
+  @apply min-h-screen bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 flex items-center justify-center p-4
+}
+
+.auth-block{
+  @apply w-full max-w-md p-8 space-y-6 bg-white/90 backdrop-blur-sm rounded-lg shadow-2xl
+}
+
+.main-header{
+  @apply text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent
+}
+
+.form-label{
+  @apply block text-sm font-medium text-gray-700
+}
+
+.form-input{
+  @apply w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 ease-in-out
+}
+
+.form-button{
+  @apply w-full px-4 py-3 text-lg font-medium text-white bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-200 ease-in-out transform hover:scale-[1.02]
+}
+
+.navigation-link{
+  @apply text-purple-600 hover:text-purple-700 font-medium focus:outline-none
+}
