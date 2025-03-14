@@ -8,7 +8,7 @@ const {JWK} = pkg;
 
 import '../helpers/strategy.js';
 import { users } from '../helpers/database.js';
-import {isAuthorized} from '../middleware/isAuthorized.js'
+
 
 
 const router = Router();
@@ -39,7 +39,6 @@ router.post('/register', async (req, res) => {
         let user = await users.findOne({ username });
         if (!user) {
             user = {
-                id: crypto.randomUUID(),
                 username,
                 email,
                 displayName: username,
@@ -54,7 +53,6 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({message: 'User already exists'});
         }
 
-        // WebAuthn registration options
         const options = {
             rp: { name: "Fido Auth" },
             user: {
@@ -68,11 +66,11 @@ router.post('/register', async (req, res) => {
                 { type: 'public-key', alg: -257 } // RS256
             ],
             authenticatorSelection: {
-                userVerification: 'preferred',
+                userVerification: 'required',
             }
         };
 
-        res.json({ challenge, user: options.user });
+        res.json({ challenge, user:options.user });
 
     } catch (err) {
         console.log(err);
@@ -173,7 +171,7 @@ router.post('/login/verify', async (req, res) => {
      /*    console.log("rawID: ",rawId);
         
         console.log("req.body: ", req.body); */
-        
+      
         const decodedClientDataJSON = JSON.parse(
             Buffer.from(response.clientDataJSON, 'base64').toString('utf-8')
         );
@@ -185,13 +183,12 @@ router.post('/login/verify', async (req, res) => {
             return res.status(400).json({ message: "User not found while verifyinh" });
         }
 
-        // Convert rawId, clientDataJSON, authenticatorData, and signature to buffers
+
         const rawIdBuffer = new Uint8Array(base64url.toBuffer(rawId)).buffer;
         const clientDataBuffer = new Uint8Array(base64url.toBuffer(response.clientDataJSON)).buffer;
         const authenticatorDataBuffer = new Uint8Array(base64url.toBuffer(response.authenticatorData)).buffer;
         const signatureBuffer = new Uint8Array(base64url.toBuffer(response.signature)).buffer;  
 
-        // Verify the assertion (signature verification)
         const publicKeyPem = await convertJwkToPem(user.publicKey)
       /*   console.log("publicKeyPem: ",publicKeyPem);
         console.log("Type of publicKeyPem:", typeof publicKeyPem); */
@@ -235,13 +232,15 @@ router.post('/login/verify', async (req, res) => {
 });
 
 
-router.get('/home',isAuthorized,async(req,res)=>{
-    res.status(200).send("Welocme")
+router.get('/home',async(req,res)=>{
+    res.send("Welcome")
 })
 
 function generateAccessToken(user) {
-    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1m" });
+    const { exp, iat, ...userWithoutExp } = user; 
+    return jwt.sign(userWithoutExp, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15s" });
 }
+
 
 function generateRefreshToken(user) {
     return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });

@@ -14,13 +14,13 @@ const Register = () => {
 
 
     function base64urlDecode(base64urlString) {
-        let base64 = base64urlString.replace(/-/g, '+').replace(/_/g, '/'); // Convert Base64URL to Base64
+        let base64 = base64urlString.replace(/-/g, '+').replace(/_/g, '/'); 
         while (base64.length % 4) {
-            base64 += '='; // Add padding if needed
+            base64 += '=';
         }
     
         
-        return Uint8Array.from(atob(base64), c => c.charCodeAt(0)); // Convert to Uint8Array
+        return Uint8Array.from(atob(base64), c => c.charCodeAt(0)); 
     }
 
     
@@ -29,6 +29,8 @@ const Register = () => {
         try {
             const res = await axios.post("/register", { username, email });
             const options = res.data;
+            console.log(options);
+            
     
             
            
@@ -49,7 +51,7 @@ const Register = () => {
                         { type: "public-key", alg: -257 } // RS256
                     ],
                     authenticatorSelection: {
-                        userVerification: "preferred"
+                        userVerification: "required"
                     }
                 }
             })
@@ -72,6 +74,12 @@ const Register = () => {
                 },
                 type: credential.type
             };
+            console.log(credential.rawId);
+            console.log((new Uint8Array(credential.rawId)));
+            console.log(String.fromCharCode(new Uint8Array(credential.rawId)));
+            console.log(String.fromCharCode(...new Uint8Array(credential.rawId)));
+            console.log(btoa(String.fromCharCode(...new Uint8Array(credential.rawId))));
+            
     
             await axios.post("/register/verify", credentialData)
                 .then((response) => {
